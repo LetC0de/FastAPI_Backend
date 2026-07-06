@@ -4,9 +4,9 @@ app = FastAPI()
 
 @app.get("/")
 def hello():
-    return {"message" : "Hello World"}
+    return {"message" : "Patients management system"}
     
 
 @app.get("/about")
 def about():
-    return {"message" : "hi, i am a python developer"}
+    return {"message" : "A fully functional patients management system"}
