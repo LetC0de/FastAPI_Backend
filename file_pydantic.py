@@ -1,12 +1,12 @@
 from pydantic import BaseModel
-from typing import List , Dict
+from typing import List , Dict , Optional
 
 class patient(BaseModel):
     name : str
     age : int 
     weight : float
     married : bool
-    allergies: List[str]
+    allergies: Optional[List[str]] = None
     contact_details : Dict[str , str]
 
 
