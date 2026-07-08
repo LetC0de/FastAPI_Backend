@@ -8,7 +8,7 @@ app = FastAPI()
 
 
 class patient(BaseModel):
-    id : Annotated[str,Field(...,description = "Id of patient" ,example =['P001'])]
+    id : Annotated[str,Field(...,description = "Id of patient" ,examples =['P001'])]
     name : Annotated[str,Field(..., description="Name of patient")]
     city: Annotated[str,Field(..., description="City of patient")]
     age : Annotated[int,Field(...,gt = 0 , le = 120,description="Age of patient")]
