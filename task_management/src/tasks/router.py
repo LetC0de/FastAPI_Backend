@@ -15,6 +15,6 @@ def get_all_tasks(db = Depends(get_db)):
     return controller.get_tasks(db)
 
 
-@task_router.get("/one_task/{task_id}")
+@task_router.get("/task_by_id/{task_id}")
 def get_one(task_id:int,db = Depends(get_db)):
     return controller.get_one_task(task_id, db)
