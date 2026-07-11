@@ -13,8 +13,10 @@ def create_task(body : Tastschema,db:Session):
     db.commit()
     db.refresh(new_task)
 
-
-
-
-
     return {"message": "Task created successfully", "data": new_task}
+
+
+
+def get_tasks(db:Session):
+    tasks = db.query(TaskModel).all()
+    return {"status":"All tasks","data":tasks}
