@@ -1,6 +1,7 @@
 from src.tasks.dtos import Tastschema
 from sqlalchemy.orm import Session
 from src.tasks.models import TaskModel
+from fastapi import HTTPException
 
 def create_task(body : Tastschema,db:Session):
     data = body.model_dump()
@@ -20,3 +21,13 @@ def create_task(body : Tastschema,db:Session):
 def get_tasks(db:Session):
     tasks = db.query(TaskModel).all()
     return {"status":"All tasks","data":tasks}
+
+
+
+def get_one_task(task_id:int,db:Session):
+    task = db.query(TaskModel).get(task_id)
+    
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    
+    return {"status":"Task fetched successfully","data":task}
