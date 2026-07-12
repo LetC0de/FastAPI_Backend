@@ -31,3 +31,20 @@ def get_one_task(task_id:int,db:Session):
         raise HTTPException(status_code=404, detail="Task not found")
     
     return {"status":"Task fetched successfully","data":task}
+
+
+def update_task(task_id:int,body:Tastschema,db:Session):
+    task = db.query(TaskModel).get(task_id)
+    
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    
+    data = body.model_dump()
+    task.title = data['title']
+    task.description = data['description']
+    task.is_completed = data['is_completed']
+    
+    db.commit()
+    db.refresh(task)
+    
+    return {"status":"Task updated successfully","data":task}
