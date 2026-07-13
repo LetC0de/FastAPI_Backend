@@ -7,3 +7,10 @@ class UserSchema(BaseModel):
     username : str
     password : str
     email : str
+
+
+class UserResponseSchema(BaseModel):
+    id : int
+    name : str
+    username : str
+    email : str
