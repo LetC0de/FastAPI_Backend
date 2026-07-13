@@ -18,3 +18,8 @@ def get_all_tasks(db = Depends(get_db)):
 @task_router.get("/task_by_id/{task_id}")
 def get_one(task_id:int,db = Depends(get_db)):
     return controller.get_one_task(task_id, db)
+
+
+@task_router.put("/update/{task_id}")
+def update_task(task_id:int,body:Tastschema,db = Depends(get_db)):
+    return controller.update_task(task_id,body,db)

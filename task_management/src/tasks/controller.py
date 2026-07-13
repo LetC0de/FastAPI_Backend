@@ -39,11 +39,12 @@ def update_task(task_id:int,body:Tastschema,db:Session):
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
     
-    data = body.model_dump()
-    task.title = data['title']
-    task.description = data['description']
-    task.is_completed = data['is_completed']
-    
+
+    task.title = body.title
+    task.description = body.description
+    task.is_completed = body.is_completed
+
+    db.add(task)
     db.commit()
     db.refresh(task)
     
