@@ -34,15 +34,14 @@ def get_one_task(task_id:int,db:Session):
 
 
 def update_task(task_id:int,body:Tastschema,db:Session):
+
     task = db.query(TaskModel).get(task_id)
-    
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
     
-
-    task.title = body.title
-    task.description = body.description
-    task.is_completed = body.is_completed
+    body = body.model_dump()
+    for field, value in body.items():
+        setattr(task, field, value)
 
     db.add(task)
     db.commit()
