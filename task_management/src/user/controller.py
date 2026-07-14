@@ -5,6 +5,7 @@ from fastapi import HTTPException, status , Request
 from pwdlib import PasswordHash
 from src.utils.settings import settings
 from datetime import datetime, timedelta
+from jwt.exceptions import InvalidTokenError
 import jwt
 
 password_hash = PasswordHash.recommended()
@@ -58,31 +59,28 @@ def login_user(body: UserLoginSchema, db: Session):
     
     exp_time = datetime.now() + timedelta(minutes=settings.EXP_TIME)
 
-    token = jwt.encode({"_id": user.id,"exp": exp_time}, settings.SECRET_KEY, settings.ALGORITHM)
+    token = jwt.encode({"_id": user.id,"exp": exp_time.timestamp()}, settings.SECRET_KEY, settings.ALGORITHM)
     
     return {"token": token}
 
 
 def is_authenticated(request:Request, db:Session):
-    token = request.headers.get("authorization")
+    try:
+        token = request.headers.get("authorization")
 
-    if not token:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token not found")
-    
-    token =token.split(" ")[-1]
+        if not token:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token not found")
+        
+        token =token.split(" ")[-1]
 
-    data = jwt.decode(token, settings.SECRET_KEY, settings.ALGORITHM)
-    user_id = data.get("_id")
-    exp_time = data.get("exp")
+        data = jwt.decode(token, settings.SECRET_KEY, settings.ALGORITHM)
+        user_id = data.get("_id")
 
-    current_time = datetime.now().timestamp()
+        user = db.query(UserModel).filter(UserModel.id == user_id).first()
 
-    if current_time > exp_time:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token Expired")
-    
-    user = db.query(UserModel).filter(UserModel.id == user_id).first()
+        if not user:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
 
-    if not user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
-
-    return user
+        return user
+    except InvalidTokenError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Token")
