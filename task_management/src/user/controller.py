@@ -1,4 +1,4 @@
-from src.user.dtos import UserSchema
+from src.user.dtos import UserSchema, UserLoginSchema
 from sqlalchemy.orm import Session
 from src.user.models import UserModel
 from fastapi import HTTPException
@@ -38,3 +38,9 @@ def register(body: UserSchema, db: Session):
     db.refresh(new_user)
 
     return new_user
+
+
+def login_user(body: UserLoginSchema, db: Session):
+    print(body)
+
+    return "User Logged In Successfully"
