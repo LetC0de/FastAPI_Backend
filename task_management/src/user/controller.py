@@ -4,6 +4,7 @@ from src.user.models import UserModel
 from fastapi import HTTPException, status
 from pwdlib import PasswordHash
 from src.utils.settings import settings
+from datetime import datetime, timedelta
 import jwt
 
 password_hash = PasswordHash.recommended()
@@ -55,7 +56,9 @@ def login_user(body: UserLoginSchema, db: Session):
     if not verify_password(body.password, user.password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect Password")
     
-    token = jwt.encode({"_id": user.id, "username": user.username}, settings.SECRET_KEY, settings.ALGORITHM)
+    exp_time = datetime.now() + timedelta(minutes=settings.EXP_TIME)
+
+    token = jwt.encode({"_id": user.id,"exp": exp_time}, settings.SECRET_KEY, settings.ALGORITHM)
     
 
     return {"token": token}
