@@ -1,13 +1,18 @@
 from src.user.dtos import UserSchema, UserLoginSchema
 from sqlalchemy.orm import Session
 from src.user.models import UserModel
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from pwdlib import PasswordHash
+from src.utils.settings import settings
+import jwt
 
 password_hash = PasswordHash.recommended()
 
 def get_password_hash(password):
     return password_hash.hash(password)
+
+def verify_password(password, hashed_password):
+    return password_hash.verify(password, hashed_password)
 
 
 def register(body: UserSchema, db: Session):
@@ -41,6 +46,16 @@ def register(body: UserSchema, db: Session):
 
 
 def login_user(body: UserLoginSchema, db: Session):
-    print(body)
+    
+    user = db.query(UserModel).filter(UserModel.username == body.username).first()
 
-    return "User Logged In Successfully"
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found") 
+    
+    if not verify_password(body.password, user.password):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect Password")
+    
+    token = jwt.encode({"_id": user.id, "username": user.username}, settings.SECRET_KEY, settings.ALGORITHM)
+    
+
+    return {"token": token}
