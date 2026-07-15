@@ -4,12 +4,14 @@ from src.tasks.dtos import Tastschema,TastResponseschema
 from src.utils.db import get_db
 from typing import List
 from sqlalchemy.orm import Session
+from src.utils.helpers import is_authenticated
+from src.user.models import UserModel
 
 
 task_router = APIRouter(prefix="/tasks")
 
 @task_router.post("/create",response_model=TastResponseschema,status_code = status.HTTP_201_CREATED)
-def create_task(body: Tastschema, db: Session = Depends(get_db)):
+def create_task(body: Tastschema, db: Session = Depends(get_db),user:UserModel = Depends(is_authenticated)):
     return controller.create_task(body, db)
 
 
