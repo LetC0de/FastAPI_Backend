@@ -31,5 +31,5 @@ def update_task(task_id:int,body:Tastschema,db:Session = Depends(get_db),user:Us
 
 
 @task_router.delete("/delete/{task_id}",response_model = None,status_code = status.HTTP_204_NO_CONTENT)
-def delete_task(task_id:int,db:Session = Depends(get_db)):
+def delete_task(task_id:int,db:Session = Depends(get_db),user:UserModel = Depends(is_authenticated)):
     return controller.delete_task(task_id,db)
