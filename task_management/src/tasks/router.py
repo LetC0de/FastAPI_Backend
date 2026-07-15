@@ -26,7 +26,7 @@ def get_one(task_id:int,db:Session = Depends(get_db),user:UserModel = Depends(is
 
 
 @task_router.put("/update/{task_id}",response_model=TastResponseschema,status_code = status.HTTP_201_CREATED)
-def update_task(task_id:int,body:Tastschema,db:Session = Depends(get_db)):
+def update_task(task_id:int,body:Tastschema,db:Session = Depends(get_db),user:UserModel = Depends(is_authenticated)):
     return controller.update_task(task_id,body,db)
 
 
