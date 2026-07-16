@@ -67,4 +67,4 @@ def delete_task(task_id:int,db:Session,user:UserModel):
     db.delete(task)
     db.commit()
     
-    return None
+    return {"message": "Task deleted successfully"}
