@@ -26,11 +26,14 @@ def get_tasks(db:Session,user:UserModel):
 
 
 
-def get_one_task(task_id:int,db:Session):
-    task = db.query(TaskModel).get(task_id)
+def get_one_task(task_id:int,db:Session,user:UserModel):
+    task: TaskModel = db.query(TaskModel).get(task_id)
     
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
+    
+    if task.user_id != user.id:
+        raise HTTPException(status_code=401, detail="You are not authorized to view this task")
     
     return task
 
