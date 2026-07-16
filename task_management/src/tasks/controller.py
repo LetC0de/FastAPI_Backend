@@ -35,11 +35,14 @@ def get_one_task(task_id:int,db:Session):
     return task
 
 
-def update_task(task_id:int,body:Tastschema,db:Session):
+def update_task(task_id:int,body:Tastschema,db:Session,user:UserModel):
 
-    task = db.query(TaskModel).get(task_id)
+    task: TaskModel = db.query(TaskModel).get(task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
+    
+    if task.user_id != user.id:
+        raise HTTPException(status_code=401, detail="You are not authorized to update this task")
     
     body = body.model_dump()
     for field, value in body.items():
