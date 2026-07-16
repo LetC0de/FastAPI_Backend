@@ -17,7 +17,7 @@ def create_task(body: Tastschema, db: Session = Depends(get_db),user:UserModel =
 
 @task_router.get("/all_tasks",response_model=List[TastResponseschema],status_code = status.HTTP_200_OK)
 def get_all_tasks(db:Session = Depends(get_db),user:UserModel = Depends(is_authenticated)):
-    return controller.get_tasks(db)
+    return controller.get_tasks(db,user)
 
 
 @task_router.get("/task_by_id/{task_id}",response_model=TastResponseschema,status_code = status.HTTP_200_OK)

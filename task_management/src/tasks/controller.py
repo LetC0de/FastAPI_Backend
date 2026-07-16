@@ -20,8 +20,8 @@ def create_task(body : Tastschema,db:Session,user:UserModel):
 
 
 
-def get_tasks(db:Session):
-    tasks = db.query(TaskModel).all()
+def get_tasks(db:Session,user:UserModel):
+    tasks = db.query(TaskModel).filter(TaskModel.user_id == user.id).all()
     return tasks
 
 
