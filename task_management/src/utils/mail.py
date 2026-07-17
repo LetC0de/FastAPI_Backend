@@ -9,7 +9,7 @@ conf = ConnectionConfig(
     MAIL_FROM = "abhishekjiiofficial86@gmail.com",
     MAIL_PORT = 587,
     MAIL_SERVER = "smtp.gmail.com",
-    MAIL_FROM_NAME="Abhishek Nishad",
+    MAIL_FROM_NAME="Task Management App",
     MAIL_STARTTLS = True,
     MAIL_SSL_TLS = False,
     USE_CREDENTIALS = True,
@@ -29,4 +29,4 @@ async def send_email(emails:List[str]):
 
     fm = FastMail(conf)
     await fm.send_message(message)
-    return {"message": "email has been sent"}
+    return {"message": "email sent successfully"}
