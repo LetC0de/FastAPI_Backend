@@ -52,11 +52,11 @@ async def register(body: UserSchema, db: Session, bg_tasks: BackgroundTasks):
 
 
 def login_user(body: UserLoginSchema, db: Session):
-    
 
+    user = db.query(UserModel).filter(UserModel.username == body.username).first()
+    
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found") 
-    user = db.query(UserModel).filter(UserModel.username == body.username).first()
     
     if not verify_password(body.password, user.password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect Password")
