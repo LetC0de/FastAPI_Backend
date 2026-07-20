@@ -1,5 +1,4 @@
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
-from pydantic import EmailStr, BaseModel
 from typing import List
 
 
@@ -22,7 +21,7 @@ async def send_email(emails:List[str]):
     html = """<p>Thankyou for Registration</p> """
 
     message = MessageSchema(
-        subject="Registration Conformation",
+        subject="Registration Confirmation",
         recipients=[emails],
         body=html,
         subtype=MessageType.html)

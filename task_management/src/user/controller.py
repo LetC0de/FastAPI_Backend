@@ -24,7 +24,7 @@ async def register(body: UserSchema, db: Session, bg_tasks: BackgroundTasks):
     is_user_exist = db.query(UserModel).filter(UserModel.username == body.username).first()
 
     if is_user_exist:
-        raise HTTPException(status_code=400, detail="User already exist")
+        raise HTTPException(status_code=400, detail="Username already exist")
     
     #2 email validation
     is_email_exist = db.query(UserModel).filter(UserModel.email == body.email).first()
